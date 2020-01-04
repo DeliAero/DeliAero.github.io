@@ -1,0 +1,273 @@
+<!--security.fileuri.strict_origin_policy-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>xeogl Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <link href="xeogl-master/examples/css/styles.css" rel="stylesheet"/>
+    
+
+    <script src="xeogl-master/build/xeogl.js"></script>
+    
+    <script src="xeogl-master/examples/js/models/glTFModel.js"></script>
+
+    <script src="xeogl-master/examples/js/models/sceneJSModel.js"></script>
+
+    <script src="xeogl-master/examples/js/annotations/pin.js"></script>
+    <script src="xeogl-master/examples/js/annotations/annotation.js"></script>
+    <link href="xeogl-master/examples/js/annotations/annotation-style.css" rel="stylesheet"/>
+
+    <script src="xeogl-master/examples/js/stories/showdown.min.js"></script>
+    <script src="xeogl-master/examples/js/stories/story.js"></script>
+    <script src="xeogl-master/examples/js/stories/annotationStory.js"></script>
+    <link href="xeogl-master/examples/js/stories/story-style.css" rel="stylesheet"/>
+
+    <style>
+
+        .xeogl-annotation-pin {
+            color: #ffffff;
+            line-height: 1.8;
+            text-align: center;
+            font-family: "monospace";
+            font-weight: bold;
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 15px;
+            border: 2px solid #ffffff;
+            background: black;
+            visibility: hidden;
+            box-shadow: 5px 5px 15px 1px #000000;
+            z-index: 0;
+        }
+
+        .xeogl-annotation-pinClickable {
+            /*border: white 1px solid;*/
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            visibility: hidden;
+            /*opacity: 0;*/
+            z-index: 3000000;
+        }
+
+        .xeogl-annotation-label {
+            position: absolute;
+            max-width: 250px;
+            min-height: 50px;
+            padding: 8px;
+            padding-left: 12px;
+            padding-right: 12px;
+            background: black;
+            color: #ffffff;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 8px;
+            border: #ffffff solid 2px;
+            box-shadow: 5px 5px 15px 1px #000000;
+            z-index: 90000;
+        }
+
+        .xeogl-annotation-label:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 8px 12px 8px 0;
+            border-color: transparent black;
+            display: block;
+            width: 0;
+            z-index: 1;
+            margin-top: -11px;
+            left: -12px;
+            top: 20px;
+        }
+
+        .xeogl-annotation-label:before {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 9px 13px 9px 0;
+            border-color: transparent #ffffff;
+            display: block;
+            width: 0;
+            z-index: 0;
+            margin-top: -12px;
+            left: -15px;
+            top: 20px;
+        }
+
+        .xeogl-annotation-title {
+            font: normal 20px arial, serif;
+            margin-bottom: 8px;
+        }
+
+        .xeogl-annotation-desc {
+            font: normal 14px arial, serif;
+        }
+
+        .xeogl-story {
+            position: absolute;
+            top: 80px;
+            z-index: 200000;
+            float: left;
+            left: 0;
+            padding: 10px;
+            padding-left: 15px;
+            height: auto;
+            text-align: left;
+            font-size: 26px;
+            color: #ffffff;
+            border: 0;
+            max-width: 400px;
+        }
+
+        .xeogl-story a {
+            text-decoration: underline;
+            color: #13d3d2 !important;
+        }
+
+        .xeogl-story a:hover {
+            text-decoration: underline;
+        }
+
+        .xeogl-story img {
+            border: 1px #9c9c9c solid;
+        }
+    </style>
+
+<body>
+
+<div id="info" style="text-align: center;">
+    
+    <h1 style = "font-size: 28px">Drone 3D Model Annotation</h1>
+</div>
+
+<script>
+
+
+    var model = new xeogl.GLTFModel({
+        id: "drone",
+        src: "dronetest/scene.gltf",
+        rotation: [90, 0, 0],
+        edgeThreshold: 20
+    });
+
+    var scene = model.scene;
+    var camera = scene.camera;
+    var input = scene.input;
+    
+            
+    var cameraFlight = new xeogl.CameraFlightAnimation();
+    
+    model.on("loaded", function () {
+
+        cameraFlight.flyTo(model);
+        
+        //----------------------------------
+        // Story
+        //----------------------------------
+        var importantmeshes = ["_364","_230"];
+        new xeogl.AnnotationStory({
+            speaking: false,
+            authoring: true,
+            text: [
+                "This is drone test as part of Deliaero team",
+                "",
+                "The [brushless motor](focusAnnotation(0)) on this drone provide the necessary lift to the drone. There are 4 of them and their configuration depend on the type of the drone.",
+                "",
+                "The [camera](focusAnnotation(1)) is the drone's system to detect ground and its height from the ground.",
+                "",
+                "The [rotors](focusAnnotation(2)) are attatched to the motor and rotate with a very high RPM",
+                "",
+                ""
+            ],
+            annotations: [
+                {
+                    type: "xeogl.Annotation",
+                    primIndex: 19,
+                    bary: [0.05, 0.16, 0.79],
+                    occludable: false,
+                    glyph: "A",
+                    title: "Brushless Motor",
+                    desc: "Specialized motor used to lift the drone",
+                    eye: [-0.0011430736631155014, -0.4872741401195526, 0.05432306230068207],
+                    look: [-0.0016701084095984697, 0.3033508360385895, 0.022154200822114944],
+                    up: [0.016372669488191605, 0.04066050425171852, 0.9990388751029968],
+                    pinShown: true,
+                    labelShown: true,
+                    mesh: model.meshes["_364"]
+                },
+                {
+                    type: "xeogl.Annotation",
+                    primIndex: 305,
+                    bary: [0.05, 0.16, 0.79],
+                    occludable: false,
+                    glyph: "B",
+                    title: "Camera",
+                    desc: "Used for estimating height of drone",
+                    eye: [-0.013646066188812256,-0.033972397446632385,-0.5150046348571777],
+                    look: [-0.043399058282375336,0.01678723283112049,0.32973501086235046],
+                    up: [0.024813780561089516, 0.7877904772758484, -0.6143050193786621],
+                    pinShown: true,
+                    labelShown: true,
+                    mesh: model.meshes["_230"]
+                },
+                
+                {
+                    type: "xeogl.Annotation",
+                    primIndex: 200,
+                    bary: [0.05, 0.16, 0.79],
+                    occludable: false,
+                    glyph: "C",
+                    title: "Rotor",
+                    desc: "Rotor spins arround and provides a downwards force",
+                    eye: [0.2568795382976532, -0.35159099102020264, 0.26310983300209045],
+                    look: [0.25369465351104736, -0.027406997978687286, 0.05293399840593338],
+                    up: [0.012712298892438412, 0.5440434813499451, 0.8389621376991272],
+                    pinShown: true,
+                    labelShown: true,
+                    mesh: model.meshes["_317"]
+                },
+            ]
+        });
+    });
+    
+     var cameraControl = new xeogl.CameraControl({
+        doublePickFlyTo: false,
+        //panToPointer:true
+    });
+
+    cameraControl.on("hoverEnter", function (hit) {
+        hit.mesh.selected = true;
+    });
+
+    cameraControl.on("hoverOut", function (hit) {
+        hit.mesh.selected = false;
+    });
+
+    cameraControl.on("picked", function (hit) {
+        cameraFlight.flyTo(hit.mesh);
+        //console.log(hit.mesh.id);
+        console.log(hit.mesh.id);
+        //console.log(camera.eye);
+        //console.log(camera.look);
+        //console.log(camera.up);
+    });
+
+    cameraControl.on("pickedNothing", function (hit) {
+        cameraFlight.flyTo(model);
+    });
+
+    scene.selectedMaterial.fillAlpha = 0.6;
+    scene.selectedMaterial.edgeAlpha = 0.6;
+    scene.selectedMaterial.edgeColor = [0, 0, 0];
+    scene.selectedMaterial.edgeWidth = 2;
+    
+    
+</script>
+</body>
+</html>
